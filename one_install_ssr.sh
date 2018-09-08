@@ -76,7 +76,7 @@ change_ke(){
 	grub2-set-default 0
 	reboot
 }
-
+cd ~
 echo '请选择你要安装的功能'
 echo '1  安装 ssr服务器'
 echo '2  开启bbr'

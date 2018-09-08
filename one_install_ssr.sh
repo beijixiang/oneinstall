@@ -8,7 +8,7 @@ install_ssr_panel(){
 	#一键安装lnmp
 	#正在准备安装lnmp
 	cd ~
-	wget http://soft.vpser.net/lnmp/lnmp1.5.tar.gz -cO lnmp1.5.tar.gz && tar zxf lnmp1.5.tar.gz && cd lnmp1.5 && ./install.sh lnmp
+	#wget http://soft.vpser.net/lnmp/lnmp1.5.tar.gz -cO lnmp1.5.tar.gz && tar zxf lnmp1.5.tar.gz && cd lnmp1.5 && ./install.sh lnmp
 
 	echo "设置虚拟主机。。。。。。"
 	lnmp vhost add
@@ -17,11 +17,11 @@ install_ssr_panel(){
 	cp /usr/local/nginx/conf/vhost/$vh.conf /usr/local/nginx/conf/vhost/$vh.conf.bak
 	cp ~/oneinstall/example.conf /usr/local/nginx/conf/vhost/$vh.conf
 	sed -i "s/server_name hostname;/server_name $vh;/" /usr/local/nginx/conf/vhost/$vh.conf
-	sed -i "s/root  \/home\/wwwroot\/defaul;/root  \/home\/wwwroot\/$vh/public;" /usr/local/nginx/conf/vhost/$vh.conf
+	sed -i "s/root  \/home\/wwwroot\/defaul;/root  \/home\/wwwroot\/$vh\/public;/" /usr/local/nginx/conf/vhost/$vh.conf
 	
 	#下载ss_panel
 	echo "正在下载ss_panel"
-	cd /home/wwwroot/你的域名
+	cd /home/wwwroot/$vh
 	git clone -b new_master https://github.com/glzjin/ss-panel-v3-mod.git tmp && mv tmp/.git . && rm -rf tmp && git reset --hard
 	chown -R root:root *
 	chmod -R 755 *
@@ -38,6 +38,7 @@ install_ssr_panel(){
 	./remove_open_basedir_restriction.sh
 
 	#提示手动配置数据库
+	cp -r /home/wwwroot/default/phpmyadmin/ /home/wwwroot/$vh/public
 	echo "浏览器打开 http://$vh/phpmyadmin"
 	echo "用户 : root\n
 	密码 :安装 lnmp 时设置的\n
@@ -55,15 +56,15 @@ install_ssr_panel(){
 
 	read -p "请按上面操作导入数据库" t1
 	read -p "这是防止误触" t2
-	read -P "还是防止误触" t3
+	read -p "还是防止误触" t3
 
 	#配置 sspanel
 	echo "正在配置sspanel"
-	cd /home/wwwroot/$vh
+	cd /home/wwwroot/$vh/
 	php composer.phar install
 	cp ~/oneinstall/.config.php config/.config.php
 	read -p "输入数据库密码:" mypasswd
-	sed -i "s/hostname/http:\/\/$vh" config/.config.php
+	sed -i "s/hostname/$vh/" config/.config.php
 	sed -i "s/mypasswd/$mypasswd/" config/.config.php
 	
 	#创建网站管理员
@@ -73,7 +74,7 @@ install_ssr_panel(){
 	
 
 	#设置天朝时间
-	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+	#cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 	#提示手动输入
 	echo "对服务器进行计划任务的设置,执行 crontab -e 命令, 添加以下五段"
@@ -117,9 +118,9 @@ install_ssr(){
 	cp apiconfig.py userapiconfig.py
 	cp config.json user-config.json
 	sed -i "s/NODE_ID = 1/NODE_ID = $node_id/" userapiconfig.py
-	sed -i "s/WEBAPI_URL = 'https:\/\/zhaoj.in'/WEBAPI_URL = 'http:\/\/198.13.53.189'/" userapiconfig.py
+	sed -i "s/WEBAPI_URL = 'https:\/\/zhaoj.in'/WEBAPI_URL = 'http:\/\/104.250.106.42'/" userapiconfig.py
 	sed -i "s/WEBAPI_TOKEN = 'glzjin'/WEBAPI_TOKEN = '123456'/" userapiconfig.py
-	sed -i "s/MYSQL_HOST = '127.0.0.1'/MYSQL_HOST = '198.13.53.189'/" userapiconfig.py
+	sed -i "s/MYSQL_HOST = '127.0.0.1'/MYSQL_HOST = '104.250.106.42'/" userapiconfig.py
 	sed -i "s/MYSQL_PASS = 'ss'/MYSQL_PASS = 'shang19950328'/" userapiconfig.py
 	sed -i "s/MYSQL_DB = 'shadowsocks'/MYSQL_DB = 'ss'/"	userapiconfig.py
 
@@ -131,7 +132,7 @@ install_ssr(){
 	
 	pip install -r requirements.txt
 	
-	curl http://198.13.53.189/mod_mu/func/ping?key=123456 >> ~/oneinstall.log
+	curl http://104.250.106.42/mod_mu/func/ping?key=123456 >> ~/oneinstall.log
 	
 	#关闭防火墙
 	systemctl stop firewalld.service

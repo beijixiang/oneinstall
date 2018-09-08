@@ -8,8 +8,6 @@ install_ssr_panel(){
 	#一键安装lnmp
 	#正在准备安装lnmp
 	cd ~
-	yum install screen -y
-	screen -S lnmp
 	wget http://soft.vpser.net/lnmp/lnmp1.5.tar.gz -cO lnmp1.5.tar.gz && tar zxf lnmp1.5.tar.gz && cd lnmp1.5 && ./install.sh lnmp
 
 	echo "设置虚拟主机。。。。。。"

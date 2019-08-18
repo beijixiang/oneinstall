@@ -111,16 +111,16 @@ install_ssr(){
 	
 	pip install cymysql
 	cd ..
-	git clone -b manyuser https://github.com/glzjin/shadowsocks.git
+	git clone -b manyuser https://github.com/beijixiang/shadowsocks.git
 	cd shadowsocks
 	chmod +x *.sh
 	# 配置程序
 	cp apiconfig.py userapiconfig.py
 	cp config.json user-config.json
 	sed -i "s/NODE_ID = 1/NODE_ID = $node_id/" userapiconfig.py
-	sed -i "s/WEBAPI_URL = 'https:\/\/zhaoj.in'/WEBAPI_URL = 'http:\/\/104.250.106.42'/" userapiconfig.py
+	sed -i "s/WEBAPI_URL = 'https:\/\/zhaoj.in'/WEBAPI_URL = 'http:\/\/104.250.106.233'/" userapiconfig.py
 	sed -i "s/WEBAPI_TOKEN = 'glzjin'/WEBAPI_TOKEN = '123456'/" userapiconfig.py
-	sed -i "s/MYSQL_HOST = '127.0.0.1'/MYSQL_HOST = '104.250.106.42'/" userapiconfig.py
+	sed -i "s/MYSQL_HOST = '127.0.0.1'/MYSQL_HOST = '104.250.106.233'/" userapiconfig.py
 	sed -i "s/MYSQL_PASS = 'ss'/MYSQL_PASS = 'shang19950328'/" userapiconfig.py
 	sed -i "s/MYSQL_DB = 'shadowsocks'/MYSQL_DB = 'ss'/"	userapiconfig.py
 
@@ -132,7 +132,7 @@ install_ssr(){
 	
 	pip install -r requirements.txt
 	
-	curl http://104.250.106.42/mod_mu/func/ping?key=123456 >> ~/oneinstall.log
+	curl http://104.250.106.233/mod_mu/func/ping?key=123456 >> ~/oneinstall.log
 	
 	#关闭防火墙
 	systemctl stop firewalld.service
